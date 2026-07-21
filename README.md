@@ -11,16 +11,6 @@ Smart motorcycle helmet with Bluetooth 5.1 audio, crash detection, and automatic
 - [ ] Sub-50µA STOP mode standby
 - [ ] Custom 2-layer PCB in KiCad
 
-## Architecture
-[Phone] ←──Bluetooth──→ [BT1026X] ←──Analog──→ [PAM8403] → Speaker
-                              ↑ UART
-                       [STM32G071RB]
-                              ↑ I2C
-                       [MPU6050]
-                              ↓ GPIO
-                       [LEDs / Button / SYS_CTRL]
-
-
 ## Hardware
 | Component | Role |
 |-----------|------|
@@ -41,25 +31,6 @@ Smart motorcycle helmet with Bluetooth 5.1 audio, crash detection, and automatic
 | 05 | BT1026X control + AT commands | ⬜ |
 | 06 | Sleep modes + current measure | ⬜ |
 | 07 | Final integration | ⬜ |
-
-## Repository Structure
-HelmetLink-STM32/
-├── docs/
-│   ├── DEBUG_LOG.md
-│   ├── images/
-│   └── schematics/
-├── firmware/
-│   ├── 01-led-blink/
-│   ├── 02-uart-printf/
-│   ├── 03-mpu6050-read/
-│   ├── 04-crash-detect/
-│   ├── 05-bt1026x-control/
-│   ├── 06-sleep-modes/
-│   └── 07-final-integration/
-├── hardware/
-│   ├── kicad/
-│   └── gerber/
-└── README.md
 
 
 ## Demo
