@@ -1,1 +1,19 @@
-firmware/.metadata/
+# STM32CubeIDE build artifacts
+Debug/
+Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+
+# STM32CubeIDE metadata
+.settings/
+.mxproject
+*.launch
+.metadata/
+
+# OS files
+Thumbs.db
+desktop.ini
