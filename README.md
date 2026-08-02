@@ -25,7 +25,7 @@ Smart motorcycle helmet with Bluetooth 5.1 audio, crash detection, and automatic
 | Block | Feature | Status |
 |-------|---------|--------|
 | 01 | Bare-metal GPIO blink + button | ✅ |
-| 02 | Bare-metal UART printf | ⬜ |
+| 02 | Bare-metal UART printf | ✅ |
 | 03 | MPU6050 I2C read | ⬜ |
 | 04 | Crash detection | ⬜ |
 | 05 | BT1026X control + AT commands | ⬜ |
