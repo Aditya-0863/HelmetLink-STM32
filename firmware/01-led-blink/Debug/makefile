@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Helmet_baremetal
+BUILD_ARTIFACT_NAME := 01-led-blink
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Helmet_baremetal.elf \
+01-led-blink.elf \
 
 MAP_FILES += \
-Helmet_baremetal.map \
+01-led-blink.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Helmet_baremetal.list \
+01-led-blink.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Helmet_baremetal.elf secondary-outputs
+main-build: 01-led-blink.elf secondary-outputs
 
 # Tool invocations
-Helmet_baremetal.elf Helmet_baremetal.map: $(OBJS) $(USER_OBJS) C:\NHCE\HELMET\Helmet_baremetal\STM32G071RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Helmet_baremetal.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\NHCE\HELMET\Helmet_baremetal\STM32G071RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Helmet_baremetal.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+01-led-blink.elf 01-led-blink.map: $(OBJS) $(USER_OBJS) C:\NHCE\HelmetLink-STM32\firmware\01-led-blink\STM32G071RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "01-led-blink.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\NHCE\HelmetLink-STM32\firmware\01-led-blink\STM32G071RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="01-led-blink.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Helmet_baremetal.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Helmet_baremetal.list"
+01-led-blink.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "01-led-blink.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Helmet_baremetal.elf Helmet_baremetal.list Helmet_baremetal.map default.size.stdout
+	-$(RM) 01-led-blink.elf 01-led-blink.list 01-led-blink.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
