@@ -11,7 +11,7 @@
 #define usart2_base (*(volatile uint32_t*) 0x40004400)
 
 
-#define GPIOA_ODR    (*(volatile uint32_t *) 0x50000014)
+#define gpioa_odr    (*(volatile uint32_t *) 0x50000014)
 
 void delay(volatile uint32_t count)
 {
@@ -62,7 +62,7 @@ int main(void){
 
     while(1)
         {
-            GPIOA_ODR ^= (1U << 5);   // Toggle LED
+            gpioa_odr ^= (1U << 5);   // Toggle LED
             delay(500000);
         }
 }
