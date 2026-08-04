@@ -31,7 +31,13 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+/* USER CODE BEGIN PD */
+#define MPU6050_ADDR (0x68 << 1)
+#define PWR_MGMT_1   0x6B
+#define WHO_AM_I     0x75
+#define ACCEL_XOUT_H 0x3B
+#define CRASH_THRESHOLD_SQ 1073741824UL   // 3g squared
+/* USER CODE END PD */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -93,9 +99,8 @@ int main(void)
   uart_init();
   printf("HelmetLink MPU6050 I2C\r\n");
 
-  #define MPU6050_ADDR (0x68 << 1)  // 0xD0
-  #define PWR_MGMT_1   0x6B
-  #define WHO_AM_I     0x75
+
+
 
   uint8_t buf[6] = {0};
   HAL_StatusTypeDef status;
@@ -131,30 +136,39 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-#define ACCEL_XOUT_H 0x3B
+	  int16_t ax, ay, az;
+	  int32_t mag_sq;
 
-int16_t ax, ay, az;
+	  // Read 6 bytes: AXH, AXL, AYH, AYL, AZH, AZL
+	  status = HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H,
+	                            I2C_MEMADD_SIZE_8BIT, buf, 6, 100);
 
-// Read 6 bytes: AXH, AXL, AYH, AYL, AZH, AZL
-status = HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H,
-                          I2C_MEMADD_SIZE_8BIT, buf, 6, 100);
+	  if(status == HAL_OK)
+	  {
+	      ax = (int16_t)((buf[0] << 8) | buf[1]);
+	      ay = (int16_t)((buf[2] << 8) | buf[3]);
+	      az = (int16_t)((buf[4] << 8) | buf[5]);
 
-if(status == HAL_OK)
-{
-    ax = (int16_t)((buf[0] << 8) | buf[1]);
-    ay = (int16_t)((buf[2] << 8) | buf[3]);
-    az = (int16_t)((buf[4] << 8) | buf[5]);
+	      mag_sq = ((int32_t)ax * ax) + ((int32_t)ay * ay) + ((int32_t)az * az);
 
-    printf("AX=%6d AY=%6d AZ=%6d\r\n", ax, ay, az);
-}
-else
-{
-    printf("Accel read failed: %d\r\n", status);
-}
+	      // Print values
+	      printf("AX=%6d AY=%6d AZ=%6d MAG2=%10ld\r\n", ax, ay, az, mag_sq);
 
-// LED heartbeat
-gpioa_odr ^= (1U << 5);
-delay(500000);
+	      // Check crash
+	      if(mag_sq > CRASH_THRESHOLD_SQ)
+	      {
+	          printf("CRASH DETECTED\r\n");
+	          delay(500000);  // Cooldown ~500ms
+	      }
+	  }
+	  else
+	  {
+	      printf("Accel read failed: %d\r\n", status);
+	  }
+
+	  // LED heartbeat
+	  gpioa_odr ^= (1U << 5);
+	  delay(500000);
 
   /* USER CODE END 3 */
 }
