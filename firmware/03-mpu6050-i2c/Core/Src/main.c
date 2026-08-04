@@ -92,6 +92,35 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uart_init();
   printf("HelmetLink MPU6050 I2C\r\n");
+
+  #define MPU6050_ADDR (0x68 << 1)  // 0xD0
+  #define PWR_MGMT_1   0x6B
+  #define WHO_AM_I     0x75
+
+  uint8_t buf[6] = {0};
+  HAL_StatusTypeDef status;
+
+  // Wake up MPU6050
+  uint8_t zero = 0;
+  status = HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, PWR_MGMT_1,
+                             I2C_MEMADD_SIZE_8BIT, &zero, 1, 100);
+  printf("Wake-up status: %d (0=OK, 1=ERROR, 2=BUSY, 3=TIMEOUT)\r\n", status);
+
+  // Read WHO_AM_I
+  status = HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, WHO_AM_I,
+                            I2C_MEMADD_SIZE_8BIT, buf, 1, 100);
+  printf("WHO_AM_I status: %d, value: 0x%02X\r\n", status, buf[0]);
+
+  if(status == HAL_OK && buf[0] == 0x68)
+  {
+      printf("MPU6050 OK\r\n");
+  }
+  else
+  {
+      printf("MPU6050 FAIL\r\n");
+  }
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -101,13 +130,35 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	    // LED heartbeat
-	    gpioa_odr ^= (1U << 5);
-	    delay(500000);
-  }
-  /* USER CODE END 3 */
+
+#define ACCEL_XOUT_H 0x3B
+
+int16_t ax, ay, az;
+
+// Read 6 bytes: AXH, AXL, AYH, AYL, AZH, AZL
+status = HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H,
+                          I2C_MEMADD_SIZE_8BIT, buf, 6, 100);
+
+if(status == HAL_OK)
+{
+    ax = (int16_t)((buf[0] << 8) | buf[1]);
+    ay = (int16_t)((buf[2] << 8) | buf[3]);
+    az = (int16_t)((buf[4] << 8) | buf[5]);
+
+    printf("AX=%6d AY=%6d AZ=%6d\r\n", ax, ay, az);
+}
+else
+{
+    printf("Accel read failed: %d\r\n", status);
 }
 
+// LED heartbeat
+gpioa_odr ^= (1U << 5);
+delay(500000);
+
+  /* USER CODE END 3 */
+}
+}
 /**
   * @brief System Clock Configuration
   * @retval None
