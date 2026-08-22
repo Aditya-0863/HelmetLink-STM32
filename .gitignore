@@ -27,3 +27,13 @@ sym-lib-table
 Thumbs.db
 .DS_Store
 desktop.ini
+# STM32CubeMX/HAL auto-generated (regenerate from .ioc)
+Drivers/
+**/Core/Startup/
+stm32g0xx_hal_conf.h
+stm32g0xx_it.c
+stm32g0xx_it.h
+stm32g0xx_hal_msp.c
+syscalls.c
+sysmem.c
+system_stm32g0xx.c
