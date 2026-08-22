@@ -3,10 +3,10 @@ Smart motorcycle helmet with Bluetooth 5.1 audio, crash detection, and automatic
 
 ## Features
 - [x] Bare-metal GPIO, UART, and power management on STM32G071RB
-- [ ] HAL I2C MPU6500 accelerometer
-- [ ] Crash detection algorithm
-- [ ] Bluetooth audio streaming (A2DP) + calls (HFP)
-- [ ] Automatic emergency call via HFP dial on crash
+- [x] HAL I2C MPU6500 accelerometer
+- [x] Crash detection algorithm
+- [x] Bluetooth audio streaming (A2DP) + calls (HFP)
+- [x] Automatic emergency call via HFP dial on crash
 - [ ] Sub-50µA STOP mode standby
 - [ ] Custom 2-layer PCB in KiCad
 
